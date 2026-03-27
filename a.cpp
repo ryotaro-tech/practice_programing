@@ -1,45 +1,36 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
-#include <cmath>
+#include <algorithm>
 using namespace std;
+using ll = long long;
+
+ll l, r;
+vector<ll> S;
+
+int check(ll num){
+	if(r <= 2*num) return 2;
+	
+	ll num1 = *(upper_bound(S.begin(), S.end(), 2*num) - 1);
+	if(num == num1) return -1;
+	int ret = check(num1);
+	return (ret < 0 ? ret : ret + 1);
+}
 
 int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 
 	int T; cin>>T;
-	using ll = long long;
-	
 	while(T--){
-		ll N,M; cin>>N>>M;
-		ll sum = 0;
-		vector<ll> A(N), B(N);
-		for(auto& a : A){
-			cin >> a;
-			a %= M;
-			sum += a;
-		}
-		for(auto& b : B){
-			cin >> b;
-			b %= M;
-			sum += b;
-		}
+		int N;cin>>N;
+		S.resize(N);
+		for(int i = 0; i < N; i++) cin>>S[i];
+		
+		l = S[0];
+		r = S[N - 1];
+		sort(S.begin(), S.end());
 
-		sort(A.begin(), A.end());
-		sort(B.begin(), B.end());
-
-		ll cnt = 0;
-		ll l = 0;
-		for(int i = N - 1; i >= 0; i--){
-			ll itr = lower_bound(B.begin() + l, B.end(), M - A[i]) - B.begin();
-			if(itr == N) break;
-			cnt++;
-			l = ++itr;
-		}
-
-		sum -= cnt*M;
-		cout << sum << "\n";
+		int ans = check(l);
+		cout << ans << "\n";
 	}
 }
-
