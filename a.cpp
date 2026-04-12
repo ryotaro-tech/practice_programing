@@ -1,36 +1,33 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
 using namespace std;
-using ll = long long;
 
-ll l, r;
-vector<ll> S;
+long sol(long a, long b, long c){
+	long l = 0, r = 600000001;
+	while(r - l > 1){
+		long mid = (l + r)/2;
+		if(a*mid*mid + b*mid + c <= 0){
+			l = mid;
+		}
+		else r = mid;
+	}
 
-int check(ll num){
-	if(r <= 2*num) return 2;
-	
-	ll num1 = *(upper_bound(S.begin(), S.end(), 2*num) - 1);
-	if(num == num1) return -1;
-	int ret = check(num1);
-	return (ret < 0 ? ret : ret + 1);
+	if(a*l*l + b*l + c == 0) return l;
+	return -1;
 }
 
 int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 
-	int T; cin>>T;
-	while(T--){
-		int N;cin>>N;
-		S.resize(N);
-		for(int i = 0; i < N; i++) cin>>S[i];
-		
-		l = S[0];
-		r = S[N - 1];
-		sort(S.begin(), S.end());
-
-		int ans = check(l);
-		cout << ans << "\n";
+	long n;cin>>n;
+	for(long d = 1; d*d*d <= n; d++){
+		if(n%d != 0) continue;
+		long m = n/d;
+		long k = sol(3, 3*d, d*d - m);
+		if(k > 0){
+			cout << k + d << ' ' << k << endl;
+			return 0;
+		}
 	}
+	cout << -1 << endl;
 }
