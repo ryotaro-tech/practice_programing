@@ -1,3 +1,4 @@
+//演習問題集 048-Small Multple
 #include <iostream>
 #include <vector>
 #include <queue>
