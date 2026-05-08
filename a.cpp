@@ -1,44 +1,43 @@
 #include <iostream>
 #include <vector>
-#include <queue>
-#include <utility>
 using namespace std;
 
-int main(){
-	ios::sync_with_stdio(false);
-	cin.tie(nullptr);
+const long long MOD = 1000000007;
 
-	int INF = 1e9;
-	int k;
-	cin>>k;
+long long modpow(long long a, long long n) {
+    long long r = 1;
 
-	vector<int> dist(k, INF);
+    while (n > 0) {
+        if (n & 1) r = r * a % MOD;
+        a = a * a % MOD;
+        n >>= 1;
+    }
 
-	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    return r;
+}
 
-	for(int d = 1; d <= 9; d++){
-		int r = d%k;
-		if(dist[r] > d){
-			dist[r] = d;
-			pq.push({d, r});
-		}
-	}
+int main() {
+    int X, Y;
+    cin >> X >> Y;
 
-	while(!pq.empty()){
-		auto [cost, r] = pq.top();
-		pq.pop();
+    int N = X + Y;
 
-		if(cost > dist[r]) continue;
-		for(int d = 0; d <= 9; d++){
-			int nr = (r * 10 + d)%k;
-			int nc = cost + d;
-			
-			if(dist[nr] > nc){
-				dist[nr] = nc;
-				pq.push({nc, nr});
-			}
-		}
-	}
-	
-	cout << dist[0] << endl;
+    vector<long long> fact(N + 1), invfact(N + 1);
+
+    fact[0] = 1;
+
+    for (int i = 1; i <= N; i++) {
+        fact[i] = fact[i - 1] * i % MOD;
+    }
+
+    invfact[N] = modpow(fact[N], MOD - 2);
+
+    for (int i = N; i >= 1; i--) {
+        invfact[i - 1] = invfact[i] * i % MOD;
+    }
+
+    long long ans =
+        fact[N] * invfact[X] % MOD * invfact[Y] % MOD;
+
+    cout << ans << endl;
 }
